@@ -8,16 +8,16 @@ Goal:
 2. Create balanced teams function (3)
     a. 3 teams with equal number of experienced & inexperienced players (6 players on each team) ********************
 3. Display stats of teams
-    a. display team name *
-    b. Total players on that team as an integer *
-    c. The player names as strings separated by commas
-    d. number of inexperienced players on that team
-    e. number of experienced players on that team
-    f. the average height of the team
-    g. the guardians of all the players on that team (as a comma-separated string)
-    h. The formatting you use to display is up to you.
+    a. display team name *****
+    b. Total players on that team as an integer *****
+    c. The player names as strings separated by commas *****
+    d. number of inexperienced players on that team *****
+    e. number of experienced players on that team *****
+    f. the average height of the team *****
+    g. the guardians of all the players on that team (as a comma-separated string)  ????????????
+    h. The formatting you use to display is up to you. *****
 Extra credit
-4. Team balanced # of experienced & inexperienced players
+4. Team balanced # of experienced & inexperienced players ??????????
 5. Main menu Quit option
 6. team stats gives players heights in asc order
 7. save team analysis
@@ -27,7 +27,8 @@ from constants import TEAMS
 from constants import PLAYERS
 import copy
 from time import sleep
-
+from operator import itemgetter
+from sys import exit
 
 Panthers = []
 Bandits = []
@@ -36,20 +37,17 @@ team_names_str = ["Panthers", "Bandits", "Warriors"]
 all_teams = [Panthers, Bandits, Warriors]
 
 # Copy PLAYERS to a new list to be mutated
-all_players = copy.deepcopy(PLAYERS)
+players_unsorted = copy.deepcopy(PLAYERS)
+# sort players in all_players by experience
+all_players = sorted(players_unsorted, key=(itemgetter("experience")))
 
 
 def clean_up():
-
     # Data cleaning (height, experience, guardians)
-    # sort players in all_players by experience
-    from operator import itemgetter
-    asp = sorted(all_players, key=(itemgetter("experience")))
+
     for i in range(len(all_players)):
         height_in = all_players[i]["height"][0:2]
-        int(height_in)
-        all_players[i]["height"] = height_in
-        # print(all_players[i]["height"])
+        all_players[i]["height"] = int(height_in)
 
         if all_players[i]["experience"] == "YES":
             all_players[i]["experience"] = bool("TRUE")
@@ -61,6 +59,8 @@ def clean_up():
         guardian_names = all_players[i]["guardians"].split(" and ")
         all_players[i]["guardians"] = guardian_names
         # print(all_players[i]["guardians"])
+
+    # all fields are good
     return all_players
 
 
@@ -102,47 +102,76 @@ def team_stats(team_name, selection):
     sum_heights = 0
     for i in team_name:
         sum_heights = sum_heights + i["height"]
-    avg_height = sum_heights / len(team_name)
-    print(f"Average player height: {avg_height} inches")
-    # the guardians of all the players on that team (as a comma-separated string)
-
+    avg_height = round(int(sum_heights) / int(len(team_name)),2)
+    print(f"Average player height: {avg_height} in")
+    # the guardians of all the players on that team (as a comma-separated string).
+    all_team_guardians = []
+    for count, i in enumerate(team_name):
+        all_team_guardians.append(team_name[count]["guardians"][0])
+    team_guardians_string = ", ".join(all_team_guardians)
+    print(f"Team guardians: {team_guardians_string}")
     # The formatting you use to display is up to you.
+
+# Main Menu
+def main_menu():
+    print("*** BASKETBALL STATS***")
+    while True:
+        try:
+            start_select = str(input("Select Option \n    a) View teams \n    b) Quit \n"))
+            if start_select.lower() == "a":
+                statistics_finder()
+            elif start_select.lower() == "b":
+                print("Program ending")
+                exit()
+            else:
+                raise ValueError
+        except ValueError:
+            print("enter a valid response")
+
 
 # User interface
 def statistics_finder():
-    print("***BASKETBALL STATS***")
-    try:
-        start_select = str(input("Select Option \n    a) View teams \n    b) Quit \n"))
-        if start_select.lower() == "a":
-            print("\n\nSELECT A TEAM TO VIEW")
-            print("    a) Panthers \n    b) Bandits \n    c) Warriors")
-            try:
-                mm_select = input("Choose one team")
-                mm_select.lower()
-                if mm_select == "a":
-                    print("Accessing Panthers team view...")
-                    sleep(.25)
-                    """
-                    loading = "##########"
-                    for letter in loading:
-                        print(letter)
-                        sleep(.1) """
-                    team_stats(Panthers, 0)
-                elif mm_select == "b":
-                    print("Bandits team viewer")
-                elif mm_select == "c":
-                    print("Warriors team viewer")
-                else:
-                    raise ValueError
-            except ValueError:
-                print("Please provide a valid response")
-            # Bring to main menu
-        elif start_select.lower() == "b":
-            print("Goodbye")
-        else:
-            raise ValueError
-    except ValueError:
-        print("Please provide a valid response")
+    while True:
+        print("\n\nSELECT A TEAM TO VIEW")
+        print("    a) Panthers \n    b) Bandits \n    c) Warriors \n    d) Main Menu")
+        try:
+            mm_select = input("Choose one team ")
+            mm_select.lower()
+            if mm_select == "a":
+                print("Accessing Panthers team view...")
+                sleep(.25)
+                """
+                loading = "##########"
+                for letter in loading:
+                    print(letter)
+                    sleep(.1) """
+                team_stats(Panthers, 0)
+            elif mm_select == "b":
+                print("Accessing Bandits team view...")
+                sleep(.25)
+                """
+                loading = "##########"
+                for letter in loading:
+                    print(letter)
+                    sleep(.1) """
+                team_stats(Bandits, 1)
+            elif mm_select == "c":
+                print("Accessing Pirates team view...")
+                sleep(.25)
+                """
+                loading = "##########"
+                for letter in loading:
+                    print(letter)
+                    sleep(.1) """
+                team_stats(Warriors, 2)
+            elif mm_select == "d":
+                print("\n\nTaking you to Main Menu")
+                main_menu()
+            else:
+                raise ValueError
+        except ValueError:
+            print("Please provide a valid response")
+
 
 # if __name__ == "__main__":
 
@@ -151,5 +180,7 @@ clean_up()
 
 draft_players()
 
-# statistics_finder()
+main_menu()
+
+statistics_finder()
 
