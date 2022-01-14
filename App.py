@@ -50,9 +50,9 @@ def clean_up():
         all_players[i]["height"] = int(height_in)
 
         if all_players[i]["experience"] == "YES":
-            all_players[i]["experience"] = bool("TRUE")
-        else:
-            all_players[i]["experience"] = bool("FALSE")
+            all_players[i]["experience"] = True
+        elif all_players[i]["experience"] == "NO":
+            all_players[i]["experience"] = False
         # print(all_players[i]["experience"])
         # print(type(all_players[i]["experience"]))
 
