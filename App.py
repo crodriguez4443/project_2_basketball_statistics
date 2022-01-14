@@ -106,11 +106,12 @@ def team_stats(team_name, selection):
     print(f"Average player height: {avg_height} in")
     # the guardians of all the players on that team (as a comma-separated string).
     all_team_guardians = []
-    for count, i in enumerate(team_name):
-        all_team_guardians.append(team_name[count]["guardians"][0])
+
+    for player in team_name:
+        g = ", ".join(player['guardians'])
+        all_team_guardians.append(g)
     team_guardians_string = ", ".join(all_team_guardians)
     print(f"Team guardians: {team_guardians_string}")
-    # The formatting you use to display is up to you.
 
 # Main Menu
 def main_menu():
