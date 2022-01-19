@@ -33,6 +33,12 @@ from sys import exit
 Panthers = []
 Bandits = []
 Warriors = []
+panthers_sorted = []
+bandits_sorted = []
+warriors_sorted = []
+panthers_stats = []
+bandits_stats = []
+warriors_stats = []
 team_names_str = ["Panthers", "Bandits", "Warriors"]
 all_teams = [Panthers, Bandits, Warriors]
 
@@ -71,10 +77,15 @@ def draft_players():
     for player in range(len(all_players)):
         all_teams[player % teams_len].append(all_players[player])
     # print("Panthers: \n", Panthers, "\n\n", "Bandits: \n", Bandits, "\n\n", Warriors)
-    return Panthers, Bandits, Warriors
+    global warriors_sorted
+    global panthers_sorted
+    global bandits_sorted
+    panthers_sorted = sorted(Panthers, key=(itemgetter("height")))
+    bandits_sorted = sorted(Bandits, key=(itemgetter("height")))
+    warriors_sorted = sorted(Warriors, key=(itemgetter("height")))
 
 
-def team_stats(team_name, selection):
+def team_stats(team_name, selection, stats_recorded):
     # give name of team
     print(f"\nTeam Name: {team_names_str[selection]}")
     # number of members on the team
@@ -99,11 +110,14 @@ def team_stats(team_name, selection):
     # number of experienced players on that team
     print(f"Experienced Players: {ep}")
     # the average height of the team
+    stats_recorded.append({"inexp": ip})
+    stats_recorded.append({"exp": ep})
     sum_heights = 0
     for i in team_name:
         sum_heights = sum_heights + i["height"]
-    avg_height = round(int(sum_heights) / int(len(team_name)),2)
+    avg_height = round(int(sum_heights) / int(len(team_name)), 2)
     print(f"Average player height: {avg_height} in")
+    stats_recorded.append({"avg_height": avg_height})
     # the guardians of all the players on that team (as a comma-separated string).
     all_team_guardians = []
 
@@ -146,7 +160,7 @@ def statistics_finder():
                 for letter in loading:
                     print(letter)
                     sleep(.1) """
-                team_stats(Panthers, 0)
+                team_stats(panthers_sorted, 0, panthers_stats)
             elif mm_select == "b":
                 print("Accessing Bandits team view...")
                 sleep(.25)
@@ -155,7 +169,7 @@ def statistics_finder():
                 for letter in loading:
                     print(letter)
                     sleep(.1) """
-                team_stats(Bandits, 1)
+                team_stats(bandits_sorted, 1, bandits_stats)
             elif mm_select == "c":
                 print("Accessing Pirates team view...")
                 sleep(.25)
@@ -164,7 +178,7 @@ def statistics_finder():
                 for letter in loading:
                     print(letter)
                     sleep(.1) """
-                team_stats(Warriors, 2)
+                team_stats(warriors_sorted, 2, warriors_stats)
             elif mm_select == "d":
                 print("\n\nTaking you to Main Menu")
                 main_menu()
@@ -173,15 +187,9 @@ def statistics_finder():
         except ValueError:
             print("Please provide a valid response")
 
-
-# if __name__ == "__main__":
-
-
-clean_up()
-
-draft_players()
-
-main_menu()
-
-statistics_finder()
+if __name__ == "__main__":
+    clean_up()
+    draft_players()
+    main_menu()
+    statistics_finder()
 
