@@ -31,12 +31,14 @@ newbandits = []
 newwarriors = []
 
 def clean_data(): 
+    no_exp = False
+    exp = True
     for player in sorted_players:
         if player["experience"] == 'NO':
-            player["experience"] = 0
+            player["experience"] = bool(no_exp)
             #turns experience into a boolean value
         elif player["experience"] == 'YES':
-            player["experience"] = 1
+            player["experience"] = bool(exp)
         player["height"] = int(player['height'][0:2]) #converts height to an integer value
         player["guardians"] = (player["guardians"]).split(" and ") 
         #removes " and " and creates a list of guardians"
@@ -100,7 +102,7 @@ def display_stats(team):
     totalheights = 0
     team_list = []
     team_guardians = []
-    print("players:\n________________")
+    print("players:\n________________\n")
     for player in team:
         team_list.append(player["name"])
         if player["experience"] == 1:
@@ -109,7 +111,6 @@ def display_stats(team):
             inex_players += 1
         totalheights += int(player['height'])
         #gives total height of team players to be averaged a few lines down
-        team_list.append(player["name"])
         #create a list of all players on the team
         for guardian in player["guardians"]: 
             team_guardians.append(guardian)
@@ -122,9 +123,8 @@ def display_stats(team):
     print(f"Total experiented players: {exp_players}")
     print(f"Total experiented players: {inex_players}")
     print(f"Average height: {round(avg_height)} inches")
-    print(f"Player guardians: {team_guardians}")
-    guardian_names = ' , '.join(str(guardian) for guardians in team_list)
-    print(guardian_names)
+    guardian_names = ' , '.join(team_guardians)
+    print(f"Player guardians: {guardian_names}")
 
     while True:
         choice = input("\n\nWould you like to view another team stat? or would you like to exit? Y/N...")
